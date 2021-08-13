@@ -100,10 +100,10 @@ def user_registration():
         response = {}
 
         if request.method == "POST":
-            full_name = request.form['full_name']
-            username = request.form['username']
-            email = request.form["email"]
-            password = request.form['password']
+            full_name = request.json['full_name']
+            username = request.json['username']
+            email = request.json["email"]
+            password = request.json['password']
 
             with sqlite3.connect("database.db") as connection:
                 cursor = connection.cursor()
@@ -121,6 +121,7 @@ def user_registration():
                     mail.send(msg)
                     return "Message sent"
     except:
+        print(Exception)
         return "Enter correct details"
 
 
