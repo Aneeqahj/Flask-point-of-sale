@@ -121,8 +121,10 @@ def user_registration():
                     mail.send(msg)
                     return "Message sent"
     except:
-        print(Exception)
-        return "Enter correct details"
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
+
+        return response
 
 
 # creating a route for adding a product
@@ -133,10 +135,10 @@ def add_products():
         response = {}
 
         if request.method == "POST":
-            name = request.form['name']
-            price = request.form['price']
-            category = request.form['category']
-            description = request.form['description']
+            name = request.json['name']
+            price = request.json['price']
+            category = request.json['category']
+            description = request.json['description']
 
             with sqlite3.connect("database.db") as connection:
                 cursor = connection.cursor()
@@ -150,8 +152,10 @@ def add_products():
                 response["status_code"] = 201
             return response
     except:
-        return "Enter Correct details"
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
 
+        return response
 
 # creating a route to view products
 @app.route('/view/', methods=['GET'])
@@ -169,8 +173,10 @@ def view_products():
         response['data'] = products
         return jsonify(response)
     except:
-        return "Enter correct details"
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
 
+        return response
 
 @app.route('/view-one/<int:product_id>/', methods=['GET'])
 def view_product(product_id):
@@ -186,7 +192,10 @@ def view_product(product_id):
         response['data'] = products
         return response
     except:
-        return "Enter correct details"
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
+
+        return response
 
 
 # creating a route to update products
@@ -242,7 +251,10 @@ def update_product(product_id):
                         response['status_code'] = 200
                 return response
     except:
-        return "Enter correct details"
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
+
+        return response
 
 
 # creating a route to delete products
@@ -260,7 +272,10 @@ def delete_product(product_id):
             response['message'] = "product deleted successfully."
         return response
     except:
-        return "Enter correct details"
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
+
+        return response
 
 
 if __name__ == "__main__":
