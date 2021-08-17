@@ -1,6 +1,7 @@
 # All my imports
 import hmac
 import sqlite3
+from datetime import timedelta
 
 from flask_cors import CORS
 from flask import Flask, request, jsonify
@@ -87,6 +88,7 @@ app.config['MAIL_PASSWORD'] = 'lotto2021'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=86400)
 app.config['SECRET_KEY'] = 'super-secret'
 CORS(app)
 
@@ -157,6 +159,7 @@ def add_products():
 
         return response
 
+
 # creating a route to view products
 @app.route('/view/', methods=['GET'])
 def view_products():
@@ -177,6 +180,7 @@ def view_products():
         response["description"] = Exception
 
         return response
+
 
 @app.route('/view-one/<int:product_id>/', methods=['GET'])
 def view_product(product_id):
