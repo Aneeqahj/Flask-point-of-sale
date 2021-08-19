@@ -27,6 +27,7 @@ def fetch_users():
         new_data = []
 
         for data in users:
+            print(data)
             new_data.append(User(data[0], data[2], data[3]))
     return new_data
 
@@ -274,6 +275,46 @@ def delete_product(product_id):
             conn.commit()
             response['status_code'] = 200
             response['message'] = "product deleted successfully."
+        return response
+    except:
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
+
+        return response
+
+
+@app.route('/view_user/<int:user_id>/', methods=['GET'])
+def view_user(user_id):
+    try:
+        response = {}
+
+        with sqlite3.connect("database.db") as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM user WHERE user_id=?", str(user_id))
+            user = cursor.fetchall()
+
+        response['status_code'] = 200
+        response['data'] = user
+        return response
+    except:
+        response["message"] = "Enter correct details"
+        response["description"] = Exception
+
+        return response
+
+
+@app.route('/delete_user/<int:user_id>/')
+# @jwt_required()
+def delete_user(user_id):
+    try:
+        response = {}
+
+        with sqlite3.connect("database.db") as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM user WHERE user_id=" + str(user_id))
+            conn.commit()
+            response['status_code'] = 200
+            response['message'] = "user deleted successfully."
         return response
     except:
         response["message"] = "Enter correct details"
