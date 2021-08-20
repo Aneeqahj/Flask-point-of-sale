@@ -32,6 +32,14 @@ def fetch_users():
     return new_data
 
 
+def get_user(username, password):
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
+        cursor.execute(f"SELECT * FROM user WHERE username = '{username}' AND password = '{password}'")
+
+        return cursor.fetchall()
+
+
 users = fetch_users()
 
 username_table = {u.username: u for u in users}
@@ -115,18 +123,20 @@ def user_registration():
                                "username,"
                                "password) VALUES(?, ?, ?)", (full_name, username, password))
                 connection.commit()
+
                 response["message"] = "success"
                 response["status_code"] = 201
-
-                if response["status_code"] == 201:
-                    msg = Message('Success', sender='aneeqahlotto@gmail.com', recipients=[email])
-                    msg.body = "Your registration was successful."
-                    mail.send(msg)
-                    return "Message sent"
-    except:
+                user = get_user(username, password)
+                print(user)
+                msg = Message('Success', sender='aneeqahlotto@gmail.com', recipients=[email])
+                response["user"] = user
+                msg.body = "Your registration was successful."
+                mail.send(msg)
+                response["description"] = "Message sent"
+    except Exception:
         response["message"] = "Enter correct details"
         response["description"] = Exception
-
+    finally:
         return response
 
 
